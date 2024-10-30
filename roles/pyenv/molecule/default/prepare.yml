@@ -1,0 +1,23 @@
+---
+- name: Pre-test environment setup
+  gather_facts: false
+  hosts: molecule
+  tasks:
+    - name: Install Ansible requirements
+      ansible.builtin.apt:
+        name: sudo
+        state: present
+        update_cache: true
+    - name: Setup Zsh
+      block:
+        - name: Install Zsh
+          ansible.builtin.apt:
+            name: zsh
+            state: present
+        - name: Create a configuration file
+          become: true
+          become_user: ubuntu
+          ansible.builtin.file:
+            state: touch
+            path: "/home/ubuntu/.zshrc"
+            mode: "0600"

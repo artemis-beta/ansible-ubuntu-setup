@@ -1,0 +1,22 @@
+---
+- name: Verify Pyenv Installation
+  gather_facts: false
+  hosts: molecule
+  tasks:
+    - name: Include role vars
+      ansible.builtin.include_vars:
+        file: ../../defaults/main.yml
+    - name: Get default Python version
+      become: true
+      become_user: ubuntu
+      ansible.builtin.shell:
+        cmd: |
+          source $HOME/.zshrc
+          set -o pipefail && python --version | cut -d ' ' -f 2 | xargs
+        executable: /usr/bin/zsh
+      register: py_version
+      changed_when: py_version.rc != 0
+    - name: Assert default Python version
+      ansible.builtin.assert:
+        that: py_version.stdout == pyenv_global_python
+        fail_msg: "Unmatched semantic versions: {{ py_version.stdout }} != {{ pyenv_global_python }}"

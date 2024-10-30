@@ -1,0 +1,60 @@
+- name: Install Python and Git
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-venv
+      - git
+    state: present
+- name: Install Pyenv
+  become_user: "{{ ansible_user | default('ubuntu') }}"
+  become: true
+  block:
+    - name: Retrieve repository
+      ansible.builtin.git:
+        repo: https://github.com/pyenv/pyenv.git
+        version: "v{{ pyenv_system_version }}"
+        dest: "/home/{{ ansible_user | default('ubuntu') }}/.pyenv"
+        single_branch: true
+    - name: Update zshrc
+      ansible.builtin.lineinfile:
+        line: "{{ item }}"
+        path: "/home/{{ ansible_user | default('ubuntu') }}/.zshrc"
+        state: present
+      loop:
+        - export PYENV_ROOT="$HOME/.pyenv"
+        - "[[ -d $PYENV_ROOT/bin ]] && export PATH=\"$PYENV_ROOT/bin:$PATH\""
+        - eval "$(pyenv init -)"
+- name: Install Python build dependencies
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - curl
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - libffi-dev
+      - liblzma-dev
+    state: present
+- name: Install User Python versions
+  become_user: "{{ ansible_user | default('ubuntu') }}"
+  become: true
+  ansible.builtin.command:
+    cmd: "/home/{{ ansible_user | default('ubuntu') }}/.pyenv/bin/pyenv install {{ item }}"
+    creates: "/home/{{ ansible_user | default('ubuntu') }}/.pyenv/versions/{{ item }}"
+  loop: "{{ pyenv_python_versions }}"
+- name: "Set global Python version to {{ pyenv_global_python }}"
+  ansible.builtin.lineinfile:
+    path: "/home/{{ ansible_user | default('ubuntu') }}/.pyenv/version"
+    line: "{{ pyenv_global_python }}"
+    create: true
+    state: present
+    regexp: '^\d+\.\d+\.\d+$'
+    mode: "0644"

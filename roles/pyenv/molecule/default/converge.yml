@@ -1,0 +1,6 @@
+---
+- name: Run and verify role
+  hosts: all
+  gather_facts: false
+  roles:
+    - artemisbeta.ubuntu_setup.pyenv

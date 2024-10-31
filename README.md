@@ -2,6 +2,10 @@
 
 Personal set of Ansible roles for deployments and installations on Ubuntu.
 
+|||
+|-------|------|
+|Install Pyenv|[![artemisbeta.ubuntu_setup.pyenv](https://github.com/artemis-beta/ansible-ubuntu-setup/actions/workflows/test_pyenv.yaml/badge.svg)](https://github.com/artemis-beta/ansible-ubuntu-setup/actions/workflows/test_pyenv.yaml)|
+
 # 🏃 Running Ansible
 
 It is strongly recommended that a virtual environment be used to install and run Ansible, or [pyenv](https://github.com/pyenv/pyenv) be used to install a user specific Python instance.

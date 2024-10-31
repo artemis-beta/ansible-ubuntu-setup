@@ -1,4 +1,7 @@
 # Ansible Collection - `artemisbeta.ubuntu_setup`
+![Static Badge](https://img.shields.io/badge/test-molecule-blue)
+![Static Badge](https://img.shields.io/badge/ansible-2.17-black)
+![Static Badge](https://img.shields.io/badge/ubuntu-22.04%20%7C%2023.04-purple)
 
 Personal set of Ansible roles for deployments and installations on Ubuntu.
 

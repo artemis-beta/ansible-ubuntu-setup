@@ -1,7 +1,7 @@
 ---
 - name: Verify Pyenv Installation
   gather_facts: false
-  hosts: molecule
+  hosts: all
   tasks:
     - name: Include role vars
       ansible.builtin.include_vars:

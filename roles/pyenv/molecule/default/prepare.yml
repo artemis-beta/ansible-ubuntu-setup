@@ -1,11 +1,18 @@
 ---
 - name: Pre-test environment setup
   gather_facts: false
-  hosts: molecule
+  hosts: all
   tasks:
+    - name: Create Ubuntu user
+      ansible.builtin.user:
+        name: ubuntu
+        group: root
+        create_home: true
     - name: Install Ansible requirements
       ansible.builtin.apt:
-        name: sudo
+        name:
+          - sudo
+          - acl
         state: present
         update_cache: true
     - name: Setup Zsh

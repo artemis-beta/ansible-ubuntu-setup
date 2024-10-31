@@ -10,10 +10,12 @@ jobs:
         with:
           path: "${{ github.repository }}"
       - name: 📥 Install Podman
-        run: sudo apt install -y podman
+        run: |
+          sudo apt update
+          sudo apt install -y podman
       - name: 🧪 Run Tests with Molecule
         uses: gofrolist/molecule-action@v2
         with:
           molecule_command: test
-          molecule_working_dir: ${{ github.workspace }}/ubuntu_setup/roles/pyenv
+          molecule_working_dir: ${{ github.repository }}/roles/pyenv
           molecule_args: --scenario-name ci

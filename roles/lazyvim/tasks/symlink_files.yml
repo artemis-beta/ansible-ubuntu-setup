@@ -1,0 +1,16 @@
+---
+- name: Check if the file already exists
+  ansible.builtin.stat:
+    path: "/home/{{ ansible_user | default('ubuntu') }}/.config/nvim/{{ item }}"
+  register: file_status
+- name: Backup file
+  when: file_status.stat.exists and not file_status.stat.islnk
+  ansible.builtin.command:
+    cmd: mv {{ nvim_dir }}/{{ item }} {{ nvim_dir }}/{{ item }}.old
+    creates: "{{ nvim_dir }}/{{ item }}.old"
+- name: Symlink file
+  when: file_status.stat.exists and not file_status.stat.islnk
+  ansible.builtin.file:
+    src: "/home/{{ ansible_user | default('ubuntu') }}/Documents/dotfiles/nvim/{{ item }}"
+    dest: "/home/{{ ansible_user | default('ubuntu') }}/.config/nvim/{{ item }}"
+    state: link

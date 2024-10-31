@@ -1,0 +1,18 @@
+---
+- name: Verify Pyenv Installation
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Include role vars
+      ansible.builtin.include_vars:
+        file: ../../defaults/main.yml
+    - name: Check nvim install
+      become: true
+      become_user: ubuntu
+      ansible.builtin.shell:
+        cmd: |
+          source $HOME/.zshrc
+          set -o pipefail && vim -c 'q' /dev/null
+        executable: /usr/bin/zsh
+      register: nvim_check
+      changed_when: nvim_check.rc != 0

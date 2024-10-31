@@ -1,0 +1,13 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: ubuntu-22.04
+    image: quay.io/ansible/ubuntu2204-test-container:8.1.0
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

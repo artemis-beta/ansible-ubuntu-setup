@@ -9,13 +9,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: "${{ github.repository }}"
-      - name: 📥 Install Podman
-        run: |
-          sudo apt update
-          sudo apt install -y podman
-      - name: 🧪 Run Tests with Molecule
-        uses: gofrolist/molecule-action@v2
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          molecule_command: test
-          molecule_working_dir: ${{ github.repository }}/roles/pyenv
-          molecule_args: --scenario-name ci
+          python-version: '3.x'
+      - name: Install dependencies.
+        run: pip3 install molecule "molecule-plugins[docker]"
+      - name: Install Galaxy dependencies.
+        run: ansible-galaxy collection install community.docker
+      - name: Run molecule
+        run: molecule test --scenario-name ci
+        working-directory: ${{ github.repository }}/roles/pyenv

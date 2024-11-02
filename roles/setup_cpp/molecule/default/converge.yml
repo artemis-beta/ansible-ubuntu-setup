@@ -1,0 +1,6 @@
+---
+- name: Run and verify role
+  hosts: all
+  gather_facts: true
+  roles:
+    - artemisbeta.ubuntu_setup.setup_cpp

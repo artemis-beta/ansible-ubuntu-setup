@@ -1,0 +1,42 @@
+---
+- name: Install LLVM pre-requisites
+  ansible.builtin.apt:
+    name:
+      - wget
+      - software-properties-common
+      - gnupg
+      - lsb-release
+    state: present
+- name: Add LLVM GPG key
+  ansible.builtin.apt_key:
+    url: https://apt.llvm.org/llvm-snapshot.gpg.key
+    state: present
+- name: Add LLVM repository
+  ansible.builtin.apt_repository:
+    repo: "deb http://apt.llvm.org/{{ ansible_distribution_release }}/ llvm-toolchain-{{ ansible_distribution_release }}-{{ setup_cpp_llvm_version }} main"
+    state: present
+    filename: llvm
+- name: Install LLVM
+  ansible.builtin.apt:
+    name:
+      - "llvm-{{ setup_cpp_llvm_version }}"
+      - "lld-{{ setup_cpp_llvm_version }}"
+      - "clang-{{ setup_cpp_llvm_version }}"
+    state: present
+    update_cache: true
+- name: Update Zshrc PATH
+  ansible.builtin.lineinfile:
+    regexp: "^export PATH=\\$PATH:/usr/lib/llvm-.*"
+    line: "export PATH=$PATH:/usr/lib/llvm-{{ setup_cpp_llvm_version }}/bin"
+    state: present
+    path: "/home/{{ ansible_user | default('ubuntu') }}/.zshrc"
+- name: Update Zshrc clang alias
+  ansible.builtin.lineinfile:
+    regexp: "^alias {{ item.0 }}=.*"
+    line: "alias {{ item.1 }}=\"{{ item.1 }}-{{ setup_cpp_llvm_version }}\""
+    state: present
+    path: "/home/{{ ansible_user | default('ubuntu') }}/.zshrc"
+  loop:
+    - ["clang\\+\\+", clang++]
+    - [clang, clang]
+    - [clang-cpp, clang-cpp]

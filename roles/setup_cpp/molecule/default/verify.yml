@@ -1,0 +1,46 @@
+---
+- name: Verify C++ Tools Installation
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Check LLVM
+      block:
+        - name: Include role vars
+          ansible.builtin.include_vars:
+            file: ../../defaults/main.yml
+        - name: Get clang version
+          become: true
+          become_user: ubuntu
+          ansible.builtin.shell:
+            cmd: |
+              source $HOME/.zshrc
+              set -o pipefail && echo ${$(clang++ --version | grep -oE '([0-9]+)\.[0-9]+\.[0-9]+')%%.*} | xargs
+            executable: /usr/bin/zsh
+          register: clang_version
+        - name: Assert clang version
+          become: true
+          become_user: ubuntu
+          ansible.builtin.assert:
+            that: clang_version.stdout == setup_cpp_llvm_version
+            msg: "Unexpected Clang version: {{ clang_version.stdout }} != {{ setup_cpp_llvm_version }}"
+        - name: Copy C++ test code
+          become: true
+          become_user: ubuntu
+          ansible.builtin.copy:
+            src: hello_world.cxx
+            dest: /tmp/hello_world.cxx
+            mode: "0600"
+        - name: Test build program
+          become: true
+          become_user: ubuntu
+          ansible.builtin.command:
+            cmd: /usr/bin/clang++-19 /tmp/hello_world.cxx -o /tmp/hello-world
+            creates: /tmp/hello-world
+        - name: Assert program executes
+          become: true
+          become_user: ubuntu
+          ansible.builtin.shell:
+            cmd: /tmp/hello-world
+            executable: /usr/bin/zsh
+          register: hello
+          changed_when: hello.rc != 0

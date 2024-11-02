@@ -17,6 +17,8 @@
       register: py_version
       changed_when: py_version.rc != 0
     - name: Assert default Python version
+      become: true
+      become_user: ubuntu
       ansible.builtin.assert:
         that: py_version.stdout == pyenv_global_python
         fail_msg: "Unmatched semantic versions: {{ py_version.stdout }} != {{ pyenv_global_python }}"

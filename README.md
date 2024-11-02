@@ -9,6 +9,7 @@ Personal set of Ansible roles for deployments and installations on Ubuntu.
 |-------|------|
 |Install Pyenv|[![artemisbeta.ubuntu_setup.pyenv](https://github.com/artemis-beta/ansible-ubuntu-setup/actions/workflows/test_pyenv.yaml/badge.svg)](https://github.com/artemis-beta/ansible-ubuntu-setup/actions/workflows/test_pyenv.yaml)|
 |Install LazyVim|[![artemisbeta.ubuntu_setup.lazyvim](https://github.com/artemis-beta/ansible-ubuntu-setup/actions/workflows/test_lazyvim.yaml/badge.svg)](https://github.com/artemis-beta/ansible-ubuntu-setup/actions/workflows/test_pyenv.yaml)|
+|Setup C++ Development Tools|[![artemisbeta.ubuntu_setup.setup_cpp](https://github.com/artemis-beta/ansible-ubuntu-setup/actions/workflows/test_setup_cpp.yaml/badge.svg)](https://github.com/artemis-beta/ansible-ubuntu-setup/actions/workflows/test_setup_cpp.yaml)|
 
 # 🏃 Running Ansible
 

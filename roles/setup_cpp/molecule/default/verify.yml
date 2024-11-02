@@ -44,3 +44,22 @@
             executable: /usr/bin/zsh
           register: hello
           changed_when: hello.rc != 0
+    - name: Test CMake install
+      block:
+        - name: Copy CMakeLists.txt
+          ansible.builtin.copy:
+            src: CMakeLists.txt
+            dest: /home/ubuntu/CMakeLists.txt
+            mode: "0600"
+        - name: Configure CMake
+          environment:
+            CXX: /usr/bin/clang++-19
+          ansible.builtin.command:
+            cmd: cmake -Bbuild .
+            creates: /home/ubuntu/build
+            chdir: /home/ubuntu
+        - name: Build executable
+          ansible.builtin.command:
+            cmd: cmake --build build
+            creates: /home/ubunty/build/hello_world
+            chdir: /home/ubuntu

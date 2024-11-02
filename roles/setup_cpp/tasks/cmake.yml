@@ -1,0 +1,17 @@
+---
+- name: Install software-properties-common
+  ansible.builtin.apt:
+    name: software-properties-common
+    state: present
+
+- name: Add Kitware's APT repository
+  ansible.builtin.apt_repository:
+    repo: ppa:kitware/ppa
+    state: present
+
+- name: Install CMake
+  ansible.builtin.apt:
+    name: cmake
+    state: present
+    update_cache: true
+

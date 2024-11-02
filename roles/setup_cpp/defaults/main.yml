@@ -1,2 +1,3 @@
 ---
 setup_cpp_llvm_version: "19"
+setup_cpp_ninja_version: "1.12.1"

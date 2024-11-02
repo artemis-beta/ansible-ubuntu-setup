@@ -55,7 +55,7 @@
           environment:
             CXX: /usr/bin/clang++-19
           ansible.builtin.command:
-            cmd: cmake -Bbuild .
+            cmd: cmake -Bbuild -G Ninja .
             creates: /home/ubuntu/build
             chdir: /home/ubuntu
         - name: Build executable

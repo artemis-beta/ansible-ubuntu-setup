@@ -1,6 +1,8 @@
 ---
 - name: Install LLVM
   ansible.builtin.include_tasks: llvm.yml
+- name: Install Ninja
+  ansible.builtin.include_tasks: ninja.yml
 - name: Install CMake
   ansible.builtin.include_tasks: cmake.yml
 

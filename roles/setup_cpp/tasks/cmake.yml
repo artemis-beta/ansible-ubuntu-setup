@@ -4,10 +4,16 @@
     name: software-properties-common
     state: present
 
-- name: Add Kitware's APT repository
+- name: Download and store GPG key
+  ansible.builtin.shell:
+    cmd: set -o pipefail | wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
+    creates: /usr/share/keyrings/kitware-archive-keyring.gpg
+
+- name: Add Kitware APT repository
   ansible.builtin.apt_repository:
-    repo: ppa:kitware/ppa
+    repo: deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ {{ ansible_distribution_release }} main
     state: present
+    update_cache: true
 
 - name: Install CMake
   ansible.builtin.apt:

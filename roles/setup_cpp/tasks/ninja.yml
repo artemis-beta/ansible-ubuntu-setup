@@ -1,0 +1,11 @@
+---
+- name: Install Zip is installed
+  ansible.builtin.apt:
+    name: zip
+    state: present
+- name: Download and install Ninja
+  ansible.builtin.unarchive:
+    src: https://github.com/ninja-build/ninja/releases/download/v{{ setup_cpp_ninja_version }}/ninja-linux.zip
+    dest: /usr/bin/
+    remote_src: true
+

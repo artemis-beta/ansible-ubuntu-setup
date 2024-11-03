@@ -4,10 +4,24 @@
     name:
       - git
       - vim
-      - neovim
       - zip
+      - build-essential
+      - gnupg
     state: present
+- name: Install Neovim
+  block:
+    - name: Add Neovim PPA repository
+      ansible.builtin.apt_repository:
+        repo: "ppa:neovim-ppa/stable"
+        state: present
+    - name: Install Neovim 
+      ansible.builtin.apt:
+        name: neovim
+        state: present
+        update_cache: true
 - name: Install LazyVim
+  become_user: "{{ ansible_user | default('ubuntu') }}"
+  become: true
   block:
     - name: Create install directory
       ansible.builtin.file:
@@ -22,6 +36,8 @@
         creates: /home/{{ ansible_user | default('ubuntu') }}/.config/nvim/README.md
         extra_opts: [--strip-components=1]
 - name: Install Extensions
+  become_user: "{{ ansible_user | default('ubuntu') }}"
+  become: true
   block:
     - name: Ensure Documents folder exists
       ansible.builtin.file:
@@ -49,7 +65,9 @@
         - pack
         - init.lua
 - name: Set alias in Zshrc
+  become_user: "{{ ansible_user | default('ubuntu') }}"
+  become: true
   ansible.builtin.lineinfile:
-    regexp: '^alias vim =.*$'
-    line: 'alias vim = "nvim"'
+    regexp: '^alias vim=.*$'
+    line: 'alias vim="nvim"'
     path: "/home/{{ ansible_user | default('ubuntu') }}/.zshrc"
